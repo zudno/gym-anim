@@ -327,26 +327,36 @@ Fuente de verdad: `packages/schema/src/scene.ts`. Las escenas de los 3 ejercicio
 
 ### 7.3 Comandos (API única para editor e IA)
 
-| Comando             | Parámetros principales                             |
-| ------------------- | -------------------------------------------------- |
-| `create_scene`      | `name`, `template?`                                |
-| `set_character`     | `model`, `basePose`                                |
-| `add_equipment`     | `equipmentType`, `position?`, `rotation?`, `load?` |
-| `update_equipment`  | `id`, cambios parciales                            |
-| `remove_equipment`  | `id`                                               |
-| `set_load`          | `equipmentId`, `load`                              |
-| `add_constraint`    | `effector`, `target`, `mode`, `offset?`            |
-| `remove_constraint` | `id`                                               |
-| `set_keyframe`      | `t`, `drivers`, `ease?`                            |
-| `remove_keyframe`   | `t`                                                |
-| `set_tempo`         | `eccentric`, `concentric`, pausas                  |
-| `set_loop`          | `mode`                                             |
-| `set_muscles`       | `primary[]`, `secondary[]`                         |
-| `set_camera`        | `preset` o `position/target/fov`                   |
-| `set_render`        | `background`, `transparent`, `width`, `height`     |
-| `set_pole`          | `limb`, `direction` (orientación de codo/rodilla)  |
+| Comando             | Parámetros principales                                               |
+| ------------------- | -------------------------------------------------------------------- |
+| `create_scene`      | `name`, `id?`, `template?`                                           |
+| `replace_scene`     | `scene` (inverso de `create_scene`)                                  |
+| `set_character`     | `model`, `basePose`                                                  |
+| `add_equipment`     | `equipmentType`, `id?`, `position?`, `rotation?`, `load?`, `index?`  |
+| `update_equipment`  | `id`, cambios parciales                                              |
+| `remove_equipment`  | `id`                                                                 |
+| `set_load`          | `equipmentId`, `load` (`null` la quita)                              |
+| `add_constraint`    | `effector`, `target`, `id?`, `mode?`, `offset?`, `weight?`, `index?` |
+| `remove_constraint` | `id`                                                                 |
+| `set_keyframe`      | `t`, `drivers`, `ease?`, `replace?`                                  |
+| `remove_keyframe`   | `t`                                                                  |
+| `set_tempo`         | `eccentric`, `concentric`, pausas                                    |
+| `set_loop`          | `mode`                                                               |
+| `set_muscles`       | `primary[]`, `secondary[]`                                           |
+| `set_camera`        | `preset` o `position/target/fov`                                     |
+| `set_render`        | `background`, `transparent`, `width`, `height`                       |
+| `set_pole`          | `limb`, `direction` (orientación de codo/rodilla)                    |
 
 Todos los comandos son serializables, reversibles (`apply` / `invert`) y validados con Zod.
+
+**Implementación (`@gym-anim/core`):**
+
+- `applyCommands(scene, commands)` aplica un **lote atómico**: valida cada comando, los aplica en orden sin mutar la escena y valida la escena resultante solo al final (así un lote puede añadir un driver keyframe a keyframe). Devuelve la escena nueva y `inverse`, la lista de comandos que la restaura exactamente; si algo falla, devuelve los problemas y no aplica nada. `applyCommand` e `invertCommands` son atajos.
+- Los inversos usan los mismos comandos: `index` restaura el orden de equipos y restricciones, `replace: true` restaura los drivers exactos de un keyframe, `load: null` quita una carga y `replace_scene` deshace `create_scene`.
+- `remove_equipment` elimina también las restricciones que apuntan al equipo y sus drivers; el inverso los restaura.
+- Ids automáticos, deterministas y válidos: `barbell`, `barbell_2`…; restricciones por efector (`hand_l`).
+- Errores: `EQUIPMENT_NOT_FOUND`, `CONSTRAINT_NOT_FOUND`, `KEYFRAME_NOT_FOUND`, `TEMPLATE_NOT_FOUND`, `DUPLICATE_ID` (con ruta `["commands", i]`), más cualquier error de validación de la escena final.
+- **Historial** (`createHistory`, `execute`, `undo`, `redo`, `canUndo`, `canRedo`): inmutable, una entrada por lote con etiqueta opcional (un cambio de la IA es una sola entrada, RF-31), límite de 200 entradas por defecto; un lote nuevo descarta lo que se podía rehacer.
 
 ---
 
