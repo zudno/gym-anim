@@ -34,6 +34,611 @@
       "properties": {
         "type": {
           "type": "string",
+          "const": "replace_scene"
+        },
+        "scene": {
+          "type": "object",
+          "properties": {
+            "$schema": {
+              "type": "string"
+            },
+            "schemaVersion": {
+              "type": "number",
+              "const": 1
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "fps": {
+              "default": 30,
+              "type": "integer",
+              "minimum": 12,
+              "maximum": 120
+            },
+            "loop": {
+              "default": "pingpong",
+              "type": "string",
+              "enum": [
+                "none",
+                "repeat",
+                "pingpong"
+              ]
+            },
+            "tempo": {
+              "type": "object",
+              "properties": {
+                "startPhase": {
+                  "default": "eccentric",
+                  "type": "string",
+                  "enum": [
+                    "eccentric",
+                    "concentric"
+                  ]
+                },
+                "eccentric": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 10
+                },
+                "concentric": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 10
+                },
+                "pauseStart": {
+                  "default": 0,
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10
+                },
+                "pauseEnd": {
+                  "default": 0,
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10
+                }
+              },
+              "required": [
+                "eccentric",
+                "concentric"
+              ],
+              "additionalProperties": false
+            },
+            "character": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+                },
+                "basePose": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+                },
+                "muscles": {
+                  "default": {},
+                  "type": "object",
+                  "properties": {
+                    "primary": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "pectoralis_major",
+                          "pectoralis_minor",
+                          "deltoid_anterior",
+                          "deltoid_lateral",
+                          "deltoid_posterior",
+                          "biceps_brachii",
+                          "brachialis",
+                          "brachioradialis",
+                          "triceps_brachii",
+                          "forearm_flexors",
+                          "forearm_extensors",
+                          "latissimus_dorsi",
+                          "trapezius_upper",
+                          "trapezius_middle",
+                          "rhomboids",
+                          "teres_major",
+                          "erector_spinae",
+                          "rectus_abdominis",
+                          "obliques",
+                          "gluteus_maximus",
+                          "gluteus_medius",
+                          "hip_flexors",
+                          "adductors",
+                          "quadriceps",
+                          "hamstrings",
+                          "gastrocnemius",
+                          "soleus",
+                          "tibialis_anterior"
+                        ]
+                      }
+                    },
+                    "secondary": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "pectoralis_major",
+                          "pectoralis_minor",
+                          "deltoid_anterior",
+                          "deltoid_lateral",
+                          "deltoid_posterior",
+                          "biceps_brachii",
+                          "brachialis",
+                          "brachioradialis",
+                          "triceps_brachii",
+                          "forearm_flexors",
+                          "forearm_extensors",
+                          "latissimus_dorsi",
+                          "trapezius_upper",
+                          "trapezius_middle",
+                          "rhomboids",
+                          "teres_major",
+                          "erector_spinae",
+                          "rectus_abdominis",
+                          "obliques",
+                          "gluteus_maximus",
+                          "gluteus_medius",
+                          "hip_flexors",
+                          "adductors",
+                          "quadriceps",
+                          "hamstrings",
+                          "gastrocnemius",
+                          "soleus",
+                          "tibialis_anterior"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "poles": {
+                  "default": {},
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "enum": [
+                      "elbow_L",
+                      "elbow_R",
+                      "knee_L",
+                      "knee_R"
+                    ]
+                  },
+                  "additionalProperties": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                }
+              },
+              "required": [
+                "model",
+                "basePose"
+              ],
+              "additionalProperties": false
+            },
+            "equipment": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+                  },
+                  "type": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+                  },
+                  "position": {
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 3,
+                    "maxItems": 3
+                  },
+                  "rotation": {
+                    "default": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 3,
+                    "maxItems": 3
+                  },
+                  "load": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "barbell"
+                          },
+                          "barKg": {
+                            "default": 20,
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 50
+                          },
+                          "platesPerSide": {
+                            "default": [],
+                            "maxItems": 8,
+                            "type": "array",
+                            "items": {
+                              "type": "number",
+                              "enum": [
+                                1.25,
+                                2.5,
+                                5,
+                                10,
+                                15,
+                                20,
+                                25
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "dumbbell"
+                          },
+                          "kg": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 100
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "kg"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "stack"
+                          },
+                          "selectedKg": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 300
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "selectedKg"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "constraints": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+                  },
+                  "effector": {
+                    "type": "string",
+                    "enum": [
+                      "pelvis",
+                      "chest",
+                      "head",
+                      "hand_L",
+                      "hand_R",
+                      "foot_L",
+                      "foot_R"
+                    ]
+                  },
+                  "target": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "default": "pin",
+                    "type": "string",
+                    "enum": [
+                      "pin",
+                      "follow",
+                      "carry"
+                    ]
+                  },
+                  "offset": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 3,
+                    "maxItems": 3
+                  },
+                  "weight": {
+                    "default": 1,
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "id",
+                  "effector",
+                  "target"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "keyframes": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "drivers": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "array",
+                          "prefixItems": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ],
+                          "items": false,
+                          "minItems": 3,
+                          "maxItems": 3
+                        }
+                      ]
+                    }
+                  },
+                  "ease": {
+                    "default": "inOutSine",
+                    "type": "string",
+                    "enum": [
+                      "linear",
+                      "inOutSine",
+                      "inOutCubic"
+                    ]
+                  }
+                },
+                "required": [
+                  "t",
+                  "drivers"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "camera": {
+              "default": {
+                "preset": "three_quarter_left"
+              },
+              "type": "object",
+              "properties": {
+                "preset": {
+                  "type": "string",
+                  "enum": [
+                    "front",
+                    "back",
+                    "left",
+                    "right",
+                    "three_quarter_left",
+                    "three_quarter_right",
+                    "top"
+                  ]
+                },
+                "position": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "target": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "fov": {
+                  "default": 35,
+                  "type": "number",
+                  "minimum": 10,
+                  "maximum": 90
+                }
+              },
+              "additionalProperties": false
+            },
+            "render": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "look": {
+                  "default": "studio",
+                  "type": "string",
+                  "enum": [
+                    "studio"
+                  ]
+                },
+                "background": {
+                  "default": "#ffffff",
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "transparent": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "width": {
+                  "default": 1080,
+                  "type": "integer",
+                  "minimum": 64,
+                  "maximum": 4096
+                },
+                "height": {
+                  "default": 1080,
+                  "type": "integer",
+                  "minimum": 64,
+                  "maximum": 4096
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "id",
+            "name",
+            "tempo",
+            "character",
+            "keyframes"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "type",
+        "scene"
+      ],
+      "additionalProperties": false,
+      "description": "Sustituye la escena completa (inverso de create_scene)"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
           "const": "set_character"
         },
         "model": {
@@ -177,6 +782,11 @@
               "additionalProperties": false
             }
           ]
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
         }
       },
       "required": [
@@ -270,80 +880,87 @@
           "pattern": "^[a-z][a-z0-9_-]{0,63}$"
         },
         "load": {
-          "oneOf": [
+          "anyOf": [
             {
-              "type": "object",
-              "properties": {
-                "kind": {
-                  "type": "string",
-                  "const": "barbell"
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "barbell"
+                    },
+                    "barKg": {
+                      "default": 20,
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 50
+                    },
+                    "platesPerSide": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "enum": [
+                          1.25,
+                          2.5,
+                          5,
+                          10,
+                          15,
+                          20,
+                          25
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "additionalProperties": false
                 },
-                "barKg": {
-                  "default": 20,
-                  "type": "number",
-                  "exclusiveMinimum": 0,
-                  "maximum": 50
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "dumbbell"
+                    },
+                    "kg": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "kg"
+                  ],
+                  "additionalProperties": false
                 },
-                "platesPerSide": {
-                  "default": [],
-                  "maxItems": 8,
-                  "type": "array",
-                  "items": {
-                    "type": "number",
-                    "enum": [
-                      1.25,
-                      2.5,
-                      5,
-                      10,
-                      15,
-                      20,
-                      25
-                    ]
-                  }
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "stack"
+                    },
+                    "selectedKg": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 300
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "selectedKg"
+                  ],
+                  "additionalProperties": false
                 }
-              },
-              "required": [
-                "kind"
-              ],
-              "additionalProperties": false
+              ]
             },
             {
-              "type": "object",
-              "properties": {
-                "kind": {
-                  "type": "string",
-                  "const": "dumbbell"
-                },
-                "kg": {
-                  "type": "number",
-                  "exclusiveMinimum": 0,
-                  "maximum": 100
-                }
-              },
-              "required": [
-                "kind",
-                "kg"
-              ],
-              "additionalProperties": false
-            },
-            {
-              "type": "object",
-              "properties": {
-                "kind": {
-                  "type": "string",
-                  "const": "stack"
-                },
-                "selectedKg": {
-                  "type": "number",
-                  "exclusiveMinimum": 0,
-                  "maximum": 300
-                }
-              },
-              "required": [
-                "kind",
-                "selectedKg"
-              ],
-              "additionalProperties": false
+              "type": "null"
             }
           ]
         }
@@ -411,6 +1028,11 @@
           "type": "number",
           "minimum": 0,
           "maximum": 1
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
         }
       },
       "required": [
@@ -489,6 +1111,9 @@
             "inOutSine",
             "inOutCubic"
           ]
+        },
+        "replace": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -497,7 +1122,7 @@
         "drivers"
       ],
       "additionalProperties": false,
-      "description": "Crea o actualiza el keyframe en t (0 = inicio, 1 = fin), fusionando drivers"
+      "description": "Crea o actualiza el keyframe en t (0 = inicio, 1 = fin). Todos los keyframes deben tener los mismos drivers: para añadir uno, envíalo en cada keyframe dentro del mismo lote"
     },
     {
       "type": "object",

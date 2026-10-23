@@ -14,6 +14,7 @@ import {
   CameraSchema,
   ConstraintModeSchema,
   DriverValueSchema,
+  SceneSchema,
   TargetSchema,
   TempoPhaseSchema,
 } from './scene';
@@ -21,7 +22,11 @@ import {
 /*
  * Comandos: única vía para modificar una escena, tanto desde el editor como desde la IA.
  * Los campos opcionales significan "no cambiar"; por eso aquí no hay valores por defecto.
+ * `@gym-anim/core` los aplica (`applyCommands`) y devuelve los comandos inversos exactos.
  */
+
+/** Posición en la lista; si falta, se agrega al final. Lo usan los inversos para restaurar el orden. */
+const ListIndexSchema = z.int().nonnegative().optional();
 
 export const CreateSceneCommandSchema = z
   .strictObject({
@@ -31,6 +36,13 @@ export const CreateSceneCommandSchema = z
     template: IdSchema.optional(),
   })
   .describe('Crea una escena nueva, vacía o a partir de una plantilla');
+
+export const ReplaceSceneCommandSchema = z
+  .strictObject({
+    type: z.literal('replace_scene'),
+    scene: SceneSchema,
+  })
+  .describe('Sustituye la escena completa (inverso de create_scene)');
 
 export const SetCharacterCommandSchema = z
   .strictObject({
@@ -48,6 +60,7 @@ export const AddEquipmentCommandSchema = z
     position: Vec3Schema.optional(),
     rotation: EulerDegSchema.optional(),
     load: LoadSchema.optional(),
+    index: ListIndexSchema,
   })
   .describe('Agrega un equipo del catálogo a la escena');
 
@@ -71,7 +84,8 @@ export const SetLoadCommandSchema = z
   .strictObject({
     type: z.literal('set_load'),
     equipmentId: IdSchema,
-    load: LoadSchema,
+    /** `null` quita la carga. */
+    load: LoadSchema.nullable(),
   })
   .describe('Cambia la carga (discos, kg de mancuerna o del stack)');
 
@@ -84,6 +98,7 @@ export const AddConstraintCommandSchema = z
     mode: ConstraintModeSchema.optional(),
     offset: Vec3Schema.optional(),
     weight: z.number().min(0).max(1).optional(),
+    index: ListIndexSchema,
   })
   .describe('Fija un efector del personaje a un ancla, al suelo o al mundo');
 
@@ -98,11 +113,15 @@ export const SetKeyframeCommandSchema = z
   .strictObject({
     type: z.literal('set_keyframe'),
     t: z.number().min(0).max(1),
-    /** Se fusionan con los drivers existentes en ese t. */
+    /** Se fusionan con los drivers existentes en ese t (salvo con `replace`). */
     drivers: z.record(z.string(), DriverValueSchema),
     ease: EaseSchema.optional(),
+    /** `true` sustituye todos los drivers del keyframe en lugar de fusionarlos. */
+    replace: z.boolean().optional(),
   })
-  .describe('Crea o actualiza el keyframe en t (0 = inicio, 1 = fin), fusionando drivers');
+  .describe(
+    'Crea o actualiza el keyframe en t (0 = inicio, 1 = fin). Todos los keyframes deben tener los mismos drivers: para añadir uno, envíalo en cada keyframe dentro del mismo lote',
+  );
 
 export const RemoveKeyframeCommandSchema = z
   .strictObject({
@@ -165,6 +184,7 @@ export const SetPoleCommandSchema = z
 
 export const CommandSchema = z.discriminatedUnion('type', [
   CreateSceneCommandSchema,
+  ReplaceSceneCommandSchema,
   SetCharacterCommandSchema,
   AddEquipmentCommandSchema,
   UpdateEquipmentCommandSchema,
