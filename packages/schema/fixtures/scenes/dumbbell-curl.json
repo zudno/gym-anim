@@ -1,0 +1,52 @@
+{
+  "$schema": "../../generated/scene.schema.json",
+  "schemaVersion": 1,
+  "id": "dumbbell-curl",
+  "name": "Curl de bíceps con mancuernas",
+  "description": "De pie, ambos brazos a la vez, agarre supino. Driver de tipo FK: el codo manda y la mancuerna sigue a la mano.",
+  "tags": ["brazos", "mancuerna", "mvp"],
+  "fps": 30,
+  "loop": "pingpong",
+  "tempo": {
+    "startPhase": "concentric",
+    "concentric": 1.0,
+    "eccentric": 2.0,
+    "pauseStart": 0,
+    "pauseEnd": 0.3
+  },
+  "character": {
+    "model": "male_athletic",
+    "basePose": "standing",
+    "muscles": {
+      "primary": ["biceps_brachii"],
+      "secondary": ["brachialis", "brachioradialis", "forearm_flexors"]
+    },
+    "poles": {
+      "elbow_L": [0, 0, -1],
+      "elbow_R": [0, 0, -1]
+    }
+  },
+  "equipment": [
+    { "id": "db_l", "type": "dumbbell", "load": { "kind": "dumbbell", "kg": 12 } },
+    { "id": "db_r", "type": "dumbbell", "load": { "kind": "dumbbell", "kg": 12 } }
+  ],
+  "constraints": [
+    { "id": "foot_l", "effector": "foot_L", "target": "floor", "offset": [0.12, 0, 0] },
+    { "id": "foot_r", "effector": "foot_R", "target": "floor", "offset": [-0.12, 0, 0] },
+    { "id": "hold_l", "effector": "hand_L", "target": "db_l.grip", "mode": "carry" },
+    { "id": "hold_r", "effector": "hand_R", "target": "db_r.grip", "mode": "carry" }
+  ],
+  "keyframes": [
+    {
+      "t": 0,
+      "drivers": { "character.forearm_L.flex": 5, "character.forearm_R.flex": 5 },
+      "ease": "inOutSine"
+    },
+    {
+      "t": 1,
+      "drivers": { "character.forearm_L.flex": 140, "character.forearm_R.flex": 140 }
+    }
+  ],
+  "camera": { "preset": "three_quarter_left", "fov": 35 },
+  "render": { "background": "#ffffff", "width": 1080, "height": 1080 }
+}

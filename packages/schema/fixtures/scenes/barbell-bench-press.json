@@ -1,0 +1,47 @@
+{
+  "$schema": "../../generated/scene.schema.json",
+  "schemaVersion": 1,
+  "id": "barbell-bench-press",
+  "name": "Press de banca con barra",
+  "description": "Tumbado en banco plano. Driver de tipo objeto: la barra manda y las manos la siguen por IK.",
+  "tags": ["pecho", "barra", "mvp"],
+  "fps": 30,
+  "loop": "pingpong",
+  "tempo": {
+    "startPhase": "eccentric",
+    "eccentric": 2.0,
+    "concentric": 1.0,
+    "pauseStart": 0.2,
+    "pauseEnd": 0
+  },
+  "character": {
+    "model": "male_athletic",
+    "basePose": "supine",
+    "muscles": {
+      "primary": ["pectoralis_major"],
+      "secondary": ["triceps_brachii", "deltoid_anterior"]
+    }
+  },
+  "equipment": [
+    { "id": "bench", "type": "flat_bench", "position": [0, 0, 0] },
+    {
+      "id": "bar",
+      "type": "barbell",
+      "load": { "kind": "barbell", "barKg": 20, "platesPerSide": [20, 10] }
+    }
+  ],
+  "constraints": [
+    { "id": "seat", "effector": "pelvis", "target": "bench.seat" },
+    { "id": "back", "effector": "chest", "target": "bench.back_pad" },
+    { "id": "foot_l", "effector": "foot_L", "target": "floor", "offset": [0.3, 0, 0.45] },
+    { "id": "foot_r", "effector": "foot_R", "target": "floor", "offset": [-0.3, 0, 0.45] },
+    { "id": "grip_l", "effector": "hand_L", "target": "bar.grip_L", "mode": "follow" },
+    { "id": "grip_r", "effector": "hand_R", "target": "bar.grip_R", "mode": "follow" }
+  ],
+  "keyframes": [
+    { "t": 0, "drivers": { "bar.position": [0, 1.15, -0.3] }, "ease": "inOutSine" },
+    { "t": 1, "drivers": { "bar.position": [0, 0.78, -0.22] } }
+  ],
+  "camera": { "preset": "three_quarter_left", "fov": 35 },
+  "render": { "background": "#ffffff", "width": 1080, "height": 1080 }
+}

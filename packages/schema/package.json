@@ -1,0 +1,19 @@
+{
+  "name": "@gym-anim/schema",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Esquemas Zod de escenas, comandos y assets de Gym Anim",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./generated/*": "./generated/*"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "generate": "tsx scripts/generate-json-schema.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

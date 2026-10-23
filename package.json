@@ -1,0 +1,25 @@
+{
+  "name": "gym-anim",
+  "private": true,
+  "description": "Editor web y agente de IA para animaciones 3D de ejercicios de gimnasio",
+  "packageManager": "pnpm@10.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "generate": "turbo run generate",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "turbo": "^2.11.10",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

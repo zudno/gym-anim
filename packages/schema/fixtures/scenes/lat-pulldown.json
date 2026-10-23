@@ -1,0 +1,52 @@
+{
+  "$schema": "../../generated/scene.schema.json",
+  "schemaVersion": 1,
+  "id": "lat-pulldown",
+  "name": "Jalón al pecho en polea",
+  "description": "Sentado en la máquina, agarre prono abierto. Driver de tipo máquina: el parámetro t mueve la barra y el stack; las manos siguen por IK.",
+  "tags": ["espalda", "máquina", "mvp"],
+  "fps": 30,
+  "loop": "pingpong",
+  "tempo": {
+    "startPhase": "concentric",
+    "concentric": 1.0,
+    "eccentric": 2.0,
+    "pauseStart": 0,
+    "pauseEnd": 0.3
+  },
+  "character": {
+    "model": "male_athletic",
+    "basePose": "seated",
+    "muscles": {
+      "primary": ["latissimus_dorsi"],
+      "secondary": [
+        "teres_major",
+        "rhomboids",
+        "trapezius_middle",
+        "deltoid_posterior",
+        "biceps_brachii"
+      ]
+    }
+  },
+  "equipment": [
+    {
+      "id": "lat",
+      "type": "lat_pulldown",
+      "position": [0, 0, 0],
+      "load": { "kind": "stack", "selectedKg": 45 }
+    }
+  ],
+  "constraints": [
+    { "id": "seat", "effector": "pelvis", "target": "lat.seat" },
+    { "id": "foot_l", "effector": "foot_L", "target": "lat.foot_L" },
+    { "id": "foot_r", "effector": "foot_R", "target": "lat.foot_R" },
+    { "id": "grip_l", "effector": "hand_L", "target": "lat.grip_L", "mode": "follow" },
+    { "id": "grip_r", "effector": "hand_R", "target": "lat.grip_R", "mode": "follow" }
+  ],
+  "keyframes": [
+    { "t": 0, "drivers": { "lat.t": 0 }, "ease": "inOutSine" },
+    { "t": 1, "drivers": { "lat.t": 1 } }
+  ],
+  "camera": { "preset": "three_quarter_right", "fov": 35 },
+  "render": { "background": "#ffffff", "width": 1080, "height": 1080 }
+}

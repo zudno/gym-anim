@@ -1,0 +1,826 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "create_scene"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "template": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Crea una escena nueva, vacía o a partir de una plantilla"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_character"
+        },
+        "model": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "basePose": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "description": "Cambia el modelo del personaje o su pose base"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "add_equipment"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "equipmentType": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "position": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "rotation": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "load": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "barbell"
+                },
+                "barKg": {
+                  "default": 20,
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 50
+                },
+                "platesPerSide": {
+                  "default": [],
+                  "maxItems": 8,
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "enum": [
+                      1.25,
+                      2.5,
+                      5,
+                      10,
+                      15,
+                      20,
+                      25
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "dumbbell"
+                },
+                "kg": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 100
+                }
+              },
+              "required": [
+                "kind",
+                "kg"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "stack"
+                },
+                "selectedKg": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 300
+                }
+              },
+              "required": [
+                "kind",
+                "selectedKg"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "equipmentType"
+      ],
+      "additionalProperties": false,
+      "description": "Agrega un equipo del catálogo a la escena"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "update_equipment"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "position": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "rotation": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "Mueve o rota un equipo existente"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "remove_equipment"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "Elimina un equipo y las restricciones/drivers que lo usan"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_load"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "load": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "barbell"
+                },
+                "barKg": {
+                  "default": 20,
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 50
+                },
+                "platesPerSide": {
+                  "default": [],
+                  "maxItems": 8,
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "enum": [
+                      1.25,
+                      2.5,
+                      5,
+                      10,
+                      15,
+                      20,
+                      25
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "dumbbell"
+                },
+                "kg": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 100
+                }
+              },
+              "required": [
+                "kind",
+                "kg"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "stack"
+                },
+                "selectedKg": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 300
+                }
+              },
+              "required": [
+                "kind",
+                "selectedKg"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "equipmentId",
+        "load"
+      ],
+      "additionalProperties": false,
+      "description": "Cambia la carga (discos, kg de mancuerna o del stack)"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "add_constraint"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        },
+        "effector": {
+          "type": "string",
+          "enum": [
+            "pelvis",
+            "chest",
+            "head",
+            "hand_L",
+            "hand_R",
+            "foot_L",
+            "foot_R"
+          ]
+        },
+        "target": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "pin",
+            "follow",
+            "carry"
+          ]
+        },
+        "offset": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "type",
+        "effector",
+        "target"
+      ],
+      "additionalProperties": false,
+      "description": "Fija un efector del personaje a un ancla, al suelo o al mundo"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "remove_constraint"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "Elimina una restricción"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_keyframe"
+        },
+        "t": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "drivers": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 3,
+                "maxItems": 3
+              }
+            ]
+          }
+        },
+        "ease": {
+          "type": "string",
+          "enum": [
+            "linear",
+            "inOutSine",
+            "inOutCubic"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "t",
+        "drivers"
+      ],
+      "additionalProperties": false,
+      "description": "Crea o actualiza el keyframe en t (0 = inicio, 1 = fin), fusionando drivers"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "remove_keyframe"
+        },
+        "t": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "type",
+        "t"
+      ],
+      "additionalProperties": false,
+      "description": "Elimina el keyframe en t"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_tempo"
+        },
+        "startPhase": {
+          "type": "string",
+          "enum": [
+            "eccentric",
+            "concentric"
+          ]
+        },
+        "eccentric": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 10
+        },
+        "concentric": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 10
+        },
+        "pauseStart": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "pauseEnd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "description": "Cambia duraciones (segundos) de las fases del movimiento"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_loop"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "repeat",
+            "pingpong"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "mode"
+      ],
+      "additionalProperties": false,
+      "description": "Cambia el modo de repetición"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_muscles"
+        },
+        "primary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "pectoralis_major",
+              "pectoralis_minor",
+              "deltoid_anterior",
+              "deltoid_lateral",
+              "deltoid_posterior",
+              "biceps_brachii",
+              "brachialis",
+              "brachioradialis",
+              "triceps_brachii",
+              "forearm_flexors",
+              "forearm_extensors",
+              "latissimus_dorsi",
+              "trapezius_upper",
+              "trapezius_middle",
+              "rhomboids",
+              "teres_major",
+              "erector_spinae",
+              "rectus_abdominis",
+              "obliques",
+              "gluteus_maximus",
+              "gluteus_medius",
+              "hip_flexors",
+              "adductors",
+              "quadriceps",
+              "hamstrings",
+              "gastrocnemius",
+              "soleus",
+              "tibialis_anterior"
+            ]
+          }
+        },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "pectoralis_major",
+              "pectoralis_minor",
+              "deltoid_anterior",
+              "deltoid_lateral",
+              "deltoid_posterior",
+              "biceps_brachii",
+              "brachialis",
+              "brachioradialis",
+              "triceps_brachii",
+              "forearm_flexors",
+              "forearm_extensors",
+              "latissimus_dorsi",
+              "trapezius_upper",
+              "trapezius_middle",
+              "rhomboids",
+              "teres_major",
+              "erector_spinae",
+              "rectus_abdominis",
+              "obliques",
+              "gluteus_maximus",
+              "gluteus_medius",
+              "hip_flexors",
+              "adductors",
+              "quadriceps",
+              "hamstrings",
+              "gastrocnemius",
+              "soleus",
+              "tibialis_anterior"
+            ]
+          }
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "description": "Reemplaza la lista de músculos principales y/o secundarios"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_camera"
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "preset": {
+              "type": "string",
+              "enum": [
+                "front",
+                "back",
+                "left",
+                "right",
+                "three_quarter_left",
+                "three_quarter_right",
+                "top"
+              ]
+            },
+            "position": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "target": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "fov": {
+              "default": 35,
+              "type": "number",
+              "minimum": 10,
+              "maximum": 90
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "type",
+        "camera"
+      ],
+      "additionalProperties": false,
+      "description": "Cambia la cámara (preset o posición/objetivo)"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_render"
+        },
+        "background": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "transparent": {
+          "type": "boolean"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 64,
+          "maximum": 4096
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 64,
+          "maximum": 4096
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "description": "Cambia fondo, transparencia o resolución del render"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "set_pole"
+        },
+        "limb": {
+          "type": "string",
+          "enum": [
+            "elbow_L",
+            "elbow_R",
+            "knee_L",
+            "knee_R"
+          ]
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "limb",
+        "direction"
+      ],
+      "additionalProperties": false,
+      "description": "Orienta un codo o rodilla"
+    }
+  ]
+}
