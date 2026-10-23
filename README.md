@@ -20,6 +20,7 @@ pnpm format      # Prettier
 
 ## Paquetes
 
-| Paquete                               | Estado | Contenido                                                     |
-| ------------------------------------- | ------ | ------------------------------------------------------------- |
-| [`@gym-anim/schema`](packages/schema) | Fase 0 | Esquemas Zod de escena, comandos y catálogo; fixtures del MVP |
+| Paquete                               | Estado | Contenido                                                                      |
+| ------------------------------------- | ------ | ------------------------------------------------------------------------------ |
+| [`@gym-anim/schema`](packages/schema) | Fase 0 | Esquemas Zod de escena, comandos y catálogo; fixtures del MVP                  |
+| [`@gym-anim/core`](packages/core)     | Fase 2 | Rig, IK, restricciones, drivers, `evaluate(scene, t)` y validación biomecánica |

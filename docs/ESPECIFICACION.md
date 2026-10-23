@@ -295,7 +295,7 @@ Fuente de verdad: `packages/schema/src/scene.ts`. Las escenas de los 3 ejercicio
     { "id": "grip_r", "effector": "hand_R", "target": "bar.grip_R", "mode": "follow" }
   ],
   "keyframes": [
-    { "t": 0, "drivers": { "bar.position": [0, 1.15, -0.3] }, "ease": "inOutSine" },
+    { "t": 0, "drivers": { "bar.position": [0, 1.12, -0.3] }, "ease": "inOutSine" },
     { "t": 1, "drivers": { "bar.position": [0, 0.78, -0.22] } }
   ],
   "camera": { "preset": "three_quarter_left", "fov": 35 },
@@ -395,6 +395,20 @@ Con este modelo la mayoría de ejercicios se describen con **2 keyframes** (inic
 | Escena sin músculos marcados                                  | Aviso |
 
 La salida es una lista estructurada `{ level, code, message, frame?, ref? }` usada por el editor (panel de problemas) y por la IA (corrección automática).
+
+**Estado (Fase 2):** implementado en `@gym-anim/core` como `IK_UNREACHABLE` (> 1 cm), `JOINT_LIMIT` (drivers articulares y flexión de codo/rodilla), `FOOT_SLIDING` (pie fijado al suelo o al mundo que se aleja > 1 cm de su posición en el primer frame), `UNKNOWN_ANCHOR`, `UNKNOWN_EQUIPMENT_DEFINITION` y `UNKNOWN_POSE`. `MUSCLES_EMPTY` está en `lintScene`. La interpenetración queda pendiente.
+
+### 8.5 Decisiones de implementación del núcleo (`@gym-anim/core`)
+
+- **API:** `evaluate(scene, segundos)`, `evaluateFrame(scene, frame)` y `evaluateProgress(scene, u)` devuelven huesos (mundo y local), puntos de efectores, equipos (posición, anclas y valor de articulaciones) y problemas del frame. `validateMotion(scene)` recorre un ciclo completo.
+- **Matemática propia** (vectores y cuaterniones, convenciones de Three.js) para que el núcleo no dependa de un motor 3D y sea determinista.
+- **Rig de referencia provisional** (~1.80 m, en reposo de pie mirando a +Z con los brazos colgando y todas las rotaciones locales en identidad) y poses base `standing`, `seated` y `supine`. Se sustituirán por las medidas del `.glb` de la Fase 1.
+- **Grados de libertad:** cada hueso define los ejes de `flex`, `abduct` y `twist`; la rotación local es `flex · abduct · twist`. Los drivers `character.<hueso>.<gdl>` sustituyen el ángulo de la pose base.
+- **Puntos de efector:** pelvis = articulación de la cadera (`hips`), pecho = `spine2`, cabeza = `head`, mano = centro del agarre, pie = centro de la planta. **Las anclas marcan dónde debe quedar exactamente ese punto.**
+- **Anclas orientadas:** si un ancla define orientación, la mano o el pie la adoptan, y para la pelvis es el marco donde se coloca la pose base (girar el banco gira al personaje). Sin orientación, la muñeca queda recta y el pie apoyado en plano siguiendo la dirección del personaje.
+- **Orden por frame:** drivers → equipos libres → pose base + FK → pelvis → pecho y cabeza (giro rígido de `spine` / `neck`) → brazos y piernas (IK analítico de dos huesos con pole) → objetos cargados (`carry`) → extremidades que van a objetos cargados → comprobación de alcance.
+- **Equipos provisionales** (`PLACEHOLDER_LIBRARY`): banco plano, máquina de jalón, barra y mancuerna con anclas y articulaciones definidas en código, mientras llegan los `.glb`. En `cable` y `prismatic`, `range` está en metros; en `revolute`, en grados.
+- **Pesas paramétricas:** `barbellGeometry`, `dumbbellGeometry` y `stackGeometry` calculan medidas en metros a partir de los kg, para que el visor las dibuje.
 
 ---
 
@@ -662,6 +676,8 @@ El MVP debe demostrar el ciclo completo **crear → editar → animar → export
 
 **Entregable:** visor mínimo que reproduce las 3 escenas fixture en loop.
 **Requerimientos:** RF-06, RF-14, RF-15, RF-16 a RF-19, RF-21 (lógica), RNF-05, RNF-06.
+
+**Estado:** núcleo implementado en `packages/core` (ver §8.5); las 3 escenas pasan `validateMotion` sin problemas. Pendiente: el visor mínimo y la detección de interpenetración.
 
 ### Fase 3 — Editor (≈ 3 semanas)
 
