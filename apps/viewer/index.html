@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym Anim · Visor</title>
+  </head>
+  <body>
+    <canvas id="viewport"></canvas>
+    <aside id="panel">
+      <h1>Gym Anim <span>visor</span></h1>
+
+      <label class="field">
+        Escena
+        <select id="scene-select"></select>
+      </label>
+      <p id="scene-description"></p>
+
+      <div class="row">
+        <button id="play" type="button">Pausa</button>
+        <span id="clock">0.00 s</span>
+      </div>
+      <label class="field">
+        Progreso del movimiento
+        <input id="progress" type="range" min="0" max="1" step="0.001" value="0" />
+      </label>
+      <label class="field">
+        Velocidad
+        <select id="speed">
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+      </label>
+
+      <div class="field">
+        Cámara
+        <div id="cameras" class="buttons"></div>
+      </div>
+
+      <label class="check"><input id="show-anchors" type="checkbox" /> Mostrar anclas</label>
+
+      <div class="field">
+        Músculos
+        <ul id="muscles"></ul>
+      </div>
+
+      <div class="field">
+        Validación
+        <ul id="issues"></ul>
+      </div>
+    </aside>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

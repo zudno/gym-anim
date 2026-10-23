@@ -19,7 +19,7 @@ describe('fixtures del MVP', () => {
         const ref = parseDriverKey(key)!;
         return ref.kind === 'joint' ? 'joint' : ref.property;
       });
-    expect(driverKinds('dumbbell-curl')).toEqual(['joint', 'joint']);
+    expect(driverKinds('dumbbell-curl')).toEqual(['joint', 'joint', 'joint', 'joint']);
     expect(driverKinds('barbell-bench-press')).toEqual(['position']);
     expect(driverKinds('lat-pulldown')).toEqual(['t']);
   });

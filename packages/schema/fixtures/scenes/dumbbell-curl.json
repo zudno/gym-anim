@@ -39,12 +39,22 @@
   "keyframes": [
     {
       "t": 0,
-      "drivers": { "character.forearm_L.flex": 5, "character.forearm_R.flex": 5 },
+      "drivers": {
+        "character.forearm_L.flex": 5,
+        "character.forearm_R.flex": 5,
+        "character.forearm_L.twist": -90,
+        "character.forearm_R.twist": 90
+      },
       "ease": "inOutSine"
     },
     {
       "t": 1,
-      "drivers": { "character.forearm_L.flex": 140, "character.forearm_R.flex": 140 }
+      "drivers": {
+        "character.forearm_L.flex": 140,
+        "character.forearm_R.flex": 140,
+        "character.forearm_L.twist": -90,
+        "character.forearm_R.twist": 90
+      }
     }
   ],
   "camera": { "preset": "three_quarter_left", "fov": 35 },
