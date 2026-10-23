@@ -26,6 +26,10 @@
         "deltoid_posterior",
         "biceps_brachii"
       ]
+    },
+    "poles": {
+      "elbow_L": [1, -0.3, -0.3],
+      "elbow_R": [-1, -0.3, -0.3]
     }
   },
   "equipment": [
