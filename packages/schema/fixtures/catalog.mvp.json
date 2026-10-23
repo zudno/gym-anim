@@ -1,0 +1,46 @@
+{
+  "characters": [
+    { "id": "male_athletic", "name": "Hombre atlético", "file": "characters/male_athletic.glb" }
+  ],
+  "poses": [
+    { "id": "standing", "name": "De pie" },
+    { "id": "seated", "name": "Sentado" },
+    { "id": "supine", "name": "Tumbado boca arriba" }
+  ],
+  "equipment": [
+    {
+      "id": "flat_bench",
+      "name": "Banco plano",
+      "category": "bench",
+      "file": "equipment/flat_bench.glb",
+      "anchors": ["seat", "back_pad"],
+      "defaultPose": "supine"
+    },
+    {
+      "id": "lat_pulldown",
+      "name": "Jalón al pecho",
+      "category": "machine",
+      "file": "equipment/lat_pulldown.glb",
+      "anchors": ["seat", "knee_pad", "grip_L", "grip_R", "foot_L", "foot_R"],
+      "joints": [{ "id": "bar", "type": "cable", "range": [0, 1], "drives": ["grip_L", "grip_R"] }],
+      "loadKinds": ["stack"],
+      "defaultPose": "seated"
+    },
+    {
+      "id": "barbell",
+      "name": "Barra olímpica",
+      "category": "free_weight",
+      "parametric": true,
+      "anchors": ["grip_L", "grip_R"],
+      "loadKinds": ["barbell"]
+    },
+    {
+      "id": "dumbbell",
+      "name": "Mancuerna",
+      "category": "free_weight",
+      "parametric": true,
+      "anchors": ["grip"],
+      "loadKinds": ["dumbbell"]
+    }
+  ]
+}
