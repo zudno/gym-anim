@@ -1,0 +1,22 @@
+{
+  "name": "@gym-anim/viewer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Visor mínimo: reproduce escenas de Gym Anim con Three.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@gym-anim/core": "workspace:*",
+    "@gym-anim/schema": "workspace:*",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "vite": "^8.3.5"
+  }
+}

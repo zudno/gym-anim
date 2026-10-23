@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "dev:viewer": "pnpm --filter @gym-anim/viewer dev",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "generate": "turbo run generate",

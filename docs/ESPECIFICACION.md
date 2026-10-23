@@ -677,7 +677,7 @@ El MVP debe demostrar el ciclo completo **crear → editar → animar → export
 **Entregable:** visor mínimo que reproduce las 3 escenas fixture en loop.
 **Requerimientos:** RF-06, RF-14, RF-15, RF-16 a RF-19, RF-21 (lógica), RNF-05, RNF-06.
 
-**Estado:** núcleo implementado en `packages/core` (ver §8.5); las 3 escenas pasan `validateMotion` sin problemas. Pendiente: el visor mínimo y la detección de interpenetración.
+**Estado:** núcleo implementado en `packages/core` (ver §8.5); las 3 escenas pasan `validateMotion` sin problemas. Visor mínimo en `apps/viewer` (`pnpm dev:viewer`): maniquí de cápsulas con músculos resaltados, equipos con primitivas, reproducción en loop, progreso manual, velocidad, presets de cámara, anclas y resultado de la validación. Pendiente: detección de interpenetración.
 
 ### Fase 3 — Editor (≈ 3 semanas)
 
